@@ -1,0 +1,13 @@
+C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/CMakeFiles/PLATFORMIO_UPLOADFS.dir
+C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/CMakeFiles/PLATFORMIO_BUILD.dir
+C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/CMakeFiles/PLATFORMIO_CLEAN.dir
+C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/CMakeFiles/PLATFORMIO_BUILD_VERBOSE.dir
+C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/CMakeFiles/PLATFORMIO_UPLOAD.dir
+C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/CMakeFiles/PLATFORMIO_MONITOR.dir
+C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/CMakeFiles/PLATFORMIO_TEST.dir
+C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/CMakeFiles/PLATFORMIO_PROGRAM.dir
+C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/CMakeFiles/PLATFORMIO_UPDATE_ALL.dir
+C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/CMakeFiles/PLATFORMIO_REBUILD_PROJECT_INDEX.dir
+C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/CMakeFiles/GreenFlight.dir
+C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/CMakeFiles/rebuild_cache.dir

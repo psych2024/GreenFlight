@@ -1,2 +1,2 @@
-# flight-controller
-Self coded simple quadcopter fc
+# GreenFlight
+Self coded simple quadcopter flight controller

@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="GreenFlight"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_UPLOADFS">
+				<Option working_dir="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_UPLOADFS"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_BUILD">
+				<Option working_dir="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_BUILD"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_CLEAN">
+				<Option working_dir="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_CLEAN"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_BUILD_VERBOSE">
+				<Option working_dir="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_BUILD_VERBOSE"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_UPLOAD">
+				<Option working_dir="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_UPLOAD"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_MONITOR">
+				<Option working_dir="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_MONITOR"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_TEST">
+				<Option working_dir="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_TEST"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_PROGRAM">
+				<Option working_dir="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_PROGRAM"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_UPDATE_ALL">
+				<Option working_dir="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_UPDATE_ALL"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_REBUILD_PROJECT_INDEX">
+				<Option working_dir="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_REBUILD_PROJECT_INDEX"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="GreenFlight">
+				<Option output="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/GreenFlight.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir=""/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/User/CLionProjects/GreenFlight/include"/>
+					<Add directory="C:/Users/User/CLionProjects/GreenFlight/src"/>
+					<Add directory="C:/Users/User/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/HID/src"/>
+					<Add directory="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/src"/>
+					<Add directory="C:/Users/User/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/SoftwareSerial/src"/>
+					<Add directory="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050"/>
+					<Add directory="C:/Users/User/CLionProjects/GreenFlight/lib/I2Cdev"/>
+					<Add directory="C:/Users/User/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/Wire/src"/>
+					<Add directory="C:/Users/User/.platformio/packages/framework-arduinoavr/cores/arduino"/>
+					<Add directory="C:/Users/User/.platformio/packages/framework-arduinoavr/variants/standard"/>
+					<Add directory="C:/Users/User/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/EEPROM/src"/>
+					<Add directory="C:/Users/User/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/SPI/src"/>
+					<Add directory="C:/Users/User/.platformio/packages/toolchain-atmelavr/avr/include"/>
+					<Add directory="C:/Users/User/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/5.4.0/include"/>
+					<Add directory="C:/Users/User/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/5.4.0/include-fixed"/>
+					<Add directory="C:/Users/User/.platformio/packages/tool-unity"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/mingw32"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/backward"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include-fixed"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 GreenFlight"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="GreenFlight/fast">
+				<Option output="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/GreenFlight.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir=""/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/User/CLionProjects/GreenFlight/include"/>
+					<Add directory="C:/Users/User/CLionProjects/GreenFlight/src"/>
+					<Add directory="C:/Users/User/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/HID/src"/>
+					<Add directory="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/src"/>
+					<Add directory="C:/Users/User/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/SoftwareSerial/src"/>
+					<Add directory="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050"/>
+					<Add directory="C:/Users/User/CLionProjects/GreenFlight/lib/I2Cdev"/>
+					<Add directory="C:/Users/User/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/Wire/src"/>
+					<Add directory="C:/Users/User/.platformio/packages/framework-arduinoavr/cores/arduino"/>
+					<Add directory="C:/Users/User/.platformio/packages/framework-arduinoavr/variants/standard"/>
+					<Add directory="C:/Users/User/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/EEPROM/src"/>
+					<Add directory="C:/Users/User/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/SPI/src"/>
+					<Add directory="C:/Users/User/.platformio/packages/toolchain-atmelavr/avr/include"/>
+					<Add directory="C:/Users/User/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/5.4.0/include"/>
+					<Add directory="C:/Users/User/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/5.4.0/include-fixed"/>
+					<Add directory="C:/Users/User/.platformio/packages/tool-unity"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/mingw32"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/backward"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include-fixed"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 GreenFlight/fast"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/User/CLionProjects/GreenFlight/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/.git/hooks/applypatch-msg.sample">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/.git/hooks/commit-msg.sample">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/.git/hooks/fsmonitor-watchman.sample">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/.git/hooks/post-update.sample">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/.git/hooks/pre-applypatch.sample">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/.git/hooks/pre-commit.sample">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/.git/hooks/pre-push.sample">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/.git/hooks/pre-rebase.sample">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/.git/hooks/pre-receive.sample">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/.git/hooks/prepare-commit-msg.sample">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/.git/hooks/update.sample">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/.git/objects/pack/pack-de662ada379d6723230db87cda2c090049c9dc9a.idx">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/.git/objects/pack/pack-de662ada379d6723230db87cda2c090049c9dc9a.pack">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/README.md">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/examples/CytronGoogleFormHTTPS/CytronGoogleFormHTTPS.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/examples/CytronWiFiDemo/CytronWiFiDemo.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/examples/CytronWiFiSDServer/CytronWiFiSDServer.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/examples/CytronWiFiServer/CytronWiFiServer.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/examples/ESP8266_Serial_Passthrough/ESP8266_Serial_Passthrough.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/examples/HTTPSClient/HTTPSClient.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/examples/SimpleWebServerWiFi/SimpleWebServerWiFi.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/examples/WiFiPushingBoxAPI/WiFiPushingBoxAPI.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/examples/WiFiSoftAP/WiFiSoftAP.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/examples/WiFiThingSpeak/WiFiThingSpeak.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/extras/ioControl.htm">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/keywords.txt">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/library.properties">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/src/CytronWiFiClient.cpp">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/src/CytronWiFiClient.h">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/src/CytronWiFiServer.cpp">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/src/CytronWiFiServer.h">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/src/CytronWiFiShield.cpp">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/src/CytronWiFiShield.h">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/CytronWiFiShield/src/util/ESP8266_AT.h">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/I2Cdev/I2Cdev.cpp">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/I2Cdev/I2Cdev.h">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/I2Cdev/keywords.txt">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/I2Cdev/library.json">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050/MPU6050.cpp">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050/MPU6050.h">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050/MPU6050_6Axis_MotionApps20.cpp">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050/MPU6050_6Axis_MotionApps20.h">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050/MPU6050_9Axis_MotionApps41.h">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050/examples/IMU_Zero/IMU_Zero.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050/examples/MPU6050_DMP6/MPU6050_DMP6.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050/examples/MPU6050_DMP6/Processing/MPUTeapot/MPUTeapot.pde">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050/examples/MPU6050_DMP6_ESPWiFi/MPU6050_DMP6_ESPWiFi.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050/examples/MPU6050_DMP6_ESPWiFi/Processing/MPUOSCTeapot/MPUOSCTeapot.pde">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050/examples/MPU6050_DMP6_Ethernet/MPU6050_DMP6_Ethernet.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050/examples/MPU6050_raw/MPU6050_raw.ino">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050/helper_3dmath.h">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/lib/MPU6050/library.json">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/src/GreenIMU.cpp">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/src/GreenIMU.h">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/src/GreenWifi.cpp">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/src/GreenWifi.h">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/src/PIDCalculator.cpp">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/src/PIDCalculator.h">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/src/main.cpp">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/src/pidtuning.cpp">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/src/sketch.cpp">
+			<Option target="GreenFlight"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="C:/Users/User/CLionProjects/GreenFlight/CMakeListsPrivate.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
