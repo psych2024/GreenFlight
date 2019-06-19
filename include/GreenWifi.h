@@ -18,7 +18,7 @@ class GreenWifi {
 public:
     void init();
     char *fetchCommand();
-    bool sendResponse(char* buff);
+    void sendResponse(const char* buff);
 
 private:
     void readForStartPoint();
@@ -26,5 +26,4 @@ private:
 };
 
 extern GreenWifi greenWifi;
-
 #endif

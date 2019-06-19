@@ -2,25 +2,6 @@
 #include "Arduino.h"
 #include "CytronWiFiShield.h"
 
-const byte ACK_CONNECT[4] = {
-        //PONG
-        0x50, 0x4F, 0x4E, 0x47
-};
-
-const byte WARN_OVERFLOW[5] = {
-        //OVERF
-        0x4F, 0x56, 0x45, 0x52, 0x46
-};
-
-const byte ACK_ARMED[5] = {
-        //ARMED
-        0x41, 0x52, 0x4D, 0x45, 0x44
-};
-
-const byte ACK_DISARMED[8] = {
-        0x44, 0x49, 0x53, 0x41, 0x52, 0x4D, 0x45, 0x44
-};
-
 char commandBuffer[COMMAND_BUFFER_SIZE];
 uint8_t marker = 0;
 WifiStatus wifiStatus = INIT;
@@ -86,7 +67,7 @@ void GreenWifi::readForStartPoint() {
 
         if (c == ':') {
             buffStatus = INCOMPLETE;
-            break;
+            return;
         }
     }
 }
@@ -97,6 +78,11 @@ char *GreenWifi::readForEndPoint() {
 
         if (c == '#') {
             buffStatus = COMPLETED;
+
+            //Add \0 to end string
+            commandBuffer[marker] = '\0';
+            marker++;
+
             return commandBuffer;
         }
 
@@ -107,6 +93,6 @@ char *GreenWifi::readForEndPoint() {
     return nullptr;
 }
 
-bool GreenWifi::sendResponse(char *buff) {
-
+void GreenWifi::sendResponse(const char *buff) {
+    wifi.udpSend((const uint8_t *) buff, strlen(buff));
 }

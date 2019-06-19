@@ -21,13 +21,13 @@ const float setpoint = 0;
 float error;
 float kp;
 float ki;
-float kd;
+float kd = 3;
 float integral;
 float previousError;
 float calculatedRoll;
 
-int leftMotorPulse;
-int rightMotorPulse;
+int leftMotorPulse = 1000;
+int rightMotorPulse = 1000;
 
 unsigned long loopTimer;
 unsigned long leftChannelTimer;
@@ -57,6 +57,7 @@ void setup() {
     packetSize = mpu.dmpGetFIFOPacketSize();
 
     pinMode(8, OUTPUT);
+    digitalWrite(LED_BUILTIN, LOW);
 }
 
 void loop() {
@@ -68,6 +69,7 @@ void loop() {
         mpu.resetFIFO();
         fifoCount = mpu.getFIFOCount();
         Serial.println(F("FIFO overflow!"));
+        digitalWrite(13, HIGH);
         return;
     }
 
@@ -94,8 +96,8 @@ void loop() {
     if(calculatedRoll < -200)
         calculatedRoll = -200;
 
-    leftMotorPulse = 1500 + calculatedRoll;
-    rightMotorPulse = 1500 - calculatedRoll;
+    leftMotorPulse = 1300 + calculatedRoll;
+    rightMotorPulse = 1300 - calculatedRoll;
 
     loopTimer = micros();
     PORTD |= B00110000;
@@ -104,13 +106,16 @@ void loop() {
     rightChannelTimer = loopTimer + rightMotorPulse;
 
     while(PORTD >= 16) {
+        digitalWrite(LED_BUILTIN, HIGH);
         loopTimer = micros();
         if(leftChannelTimer <= loopTimer) PORTD &= B11101111;
         if(rightChannelTimer <= loopTimer) PORTD &= B11011111;
     }
 
+    digitalWrite(LED_BUILTIN, LOW);
+
     if(micros() - programTimer > 5000)
-        digitalWrite(8, HIGH);
+        digitalWrite(13, HIGH);
 
     while (micros() - programTimer < 5000);
 }
