@@ -10,7 +10,7 @@ BufferStatus buffStatus = EMPTY;
 void GreenWifi::init() {
     Serial.println(F("Initializing wifi module..."));
 
-    if (!wifi.begin(WIFI_MODULE_RX_PIN, WIFI_MODULE_TX_PIN)) {
+    if (!wifi.begin(WIFI_MODULE_RX_PIN, WIFI_MODULE_TX_PIN, true)) {
         Serial.println(F("Error connecting to wifi module!"));
         while (true);
     }

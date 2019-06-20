@@ -26,6 +26,7 @@ Distributed as-is; no warranty is given.
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 #include <IPAddress.h>
+#include "AltSoftSerial.h"
 
 ///////////////////////////////
 // Command Response Timeouts //
@@ -75,7 +76,7 @@ class ESP8266Class : public Stream
 public:
 	
 	ESP8266Class();
-	bool begin(uint8_t rx_pin=2, uint8_t tx_pin=3);
+	bool begin(uint8_t rx_pin=2, uint8_t tx_pin=3, bool useAltSoft = true);
 	bool begin(HardwareSerial &hSerial);
 	///////////////////////
 	// Basic AT Commands //
@@ -150,8 +151,9 @@ public:
 	IPAddress _client[ESP8266_MAX_SOCK_NUM];
 	
 protected:
-    	Stream* _serial;
+    Stream* _serial;
 	SoftwareSerial* swSerial;
+	AltSoftSerial* altSerial;
 	
 private:
 	bool init();
