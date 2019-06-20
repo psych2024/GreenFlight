@@ -25,7 +25,7 @@ Distributed as-is; no warranty is given.
 
 #define ESP8266_DISABLE_ECHO 0
 #define SERVER_TIMEOUT 5
-#define baudRate 9600
+#define baudRate 19200
 
 char esp8266RxBuffer[ESP8266_RX_BUFFER_LEN];
 unsigned int bufferHead;
@@ -88,7 +88,7 @@ bool ESP8266Class::init() {
         if (!setMode(WIFI_STA))
             return false;
 
-        if (!showInfo(true))
+        if (!showInfo(false))
             return false;
 
         if (!setAutoConn(false))
