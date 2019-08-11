@@ -22,6 +22,8 @@ int rollInputChannel = 1500;
 
 bool armed = false;
 
+int batteryVoltage = 0;
+
 void sendESCPulse();
 
 void parseCommand();
@@ -31,25 +33,26 @@ void setup() {
     DDRD |= B11110000;
     pinMode(13, OUTPUT);
 
-    //greenImu.init();
     greenWifi.init();
+    greenImu.init();
 }
 
 void loop() {
     programTimer = micros();
 
-    //greenImu.updateYPR();
-
     sendESCPulse();
 
-    if (micros() - programTimer > 5000) {
+    greenImu.updateYPR();
+
+    batteryVoltage = (analogRead(0) + 65) * 1.2317;
+
+    //though 200hz is 5000us 250us is left as tolerance to prevent mpu6050 buffer overflow
+    if (micros() - programTimer > 4750) {
         Serial.println(F("Can't keep up with timer!"));
     }
 
-    Serial.println(micros() - programTimer);
-
     //rest of the time can be used to parse command
-    while (micros() - programTimer < 5000) parseCommand();
+    while (micros() - programTimer < 4750) parseCommand();
 }
 
 void parseCommand() {
@@ -58,29 +61,36 @@ void parseCommand() {
         Serial.print(F("Received Command: "));
         Serial.println(cmd);
 
-        if (strcmp(cmd, PSTR("PING")) == 0) {
-            greenWifi.sendResponse(PSTR("PONG"));
-        } else if (strcmp(cmd, PSTR("ARM")) == 0) {
+        if (strcmp(cmd, "PING") == 0) {
+            greenWifi.sendResponse("PONG");
+        } else if (strcmp(cmd, "ARM") == 0) {
             armed = true;
-            greenWifi.sendResponse(PSTR("ARMED"));
-        } else if (strcmp(cmd, PSTR("DISARM")) == 0) {
+            digitalWrite(LED_BUILTIN, HIGH);
+            greenWifi.sendResponse("ARMED");
+        } else if (strcmp(cmd, "DISARM") == 0) {
             armed = false;
-            greenWifi.sendResponse(PSTR("DISARMED"));
+            digitalWrite(LED_BUILTIN, LOW);
+            greenWifi.sendResponse("DISARMED");
         } else if (*cmd == 'T') {
-            throttleInputChannel = atoi(strtok(cmd, PSTR("TYPR")));
-            yawInputChannel = atoi(strtok(NULL, PSTR("TYPR")));
-            pitchInputChannel = atoi(strtok(NULL, PSTR("TYPR")));
-            rollInputChannel = atoi(strtok(NULL, PSTR("TYPR")));
-
-            constrain(throttleInputChannel, 1000, 2000);
-            constrain(yawInputChannel, 1000, 2000);
-            constrain(pitchInputChannel, 1000, 2000);
-            constrain(rollInputChannel, 1000, 2000);
+            throttleInputChannel = atoi(strtok(cmd, "TYPR"));
+            yawInputChannel = atoi(strtok(NULL, "TYPR"));
+            pitchInputChannel = atoi(strtok(NULL, "TYPR"));
+            rollInputChannel = atoi(strtok(NULL, "TYPR"));
 
             if (throttleInputChannel == 0 || yawInputChannel == 0 ||
                 pitchInputChannel == 0 || rollInputChannel == 0) {
                 Serial.println(F("Failed to parse input"));
             }
+
+            throttleInputChannel = constrain(throttleInputChannel, 1000, 2000);
+            yawInputChannel = constrain(yawInputChannel, 1000, 2000);
+            pitchInputChannel = constrain(pitchInputChannel, 1000, 2000);
+            rollInputChannel = constrain(rollInputChannel, 1000, 2000);
+
+        } else if (*cmd == 'V') {
+            char buff[5];
+            sprintf(buff, "V%d", batteryVoltage);
+            greenWifi.sendResponse(buff);
         }
     }
 }

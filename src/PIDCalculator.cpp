@@ -2,18 +2,18 @@
 #include "PIDCalculator.h"
 #include "GreenIMU.h"
 
-float pitchKp = 1.0;
-float pitchKi = 0;
-float pitchKd = 15.0;
+const float pitchKp = 1.1;
+const float pitchKi = 0;
+const float pitchKd = 85;
 
 //pid configuration should be the same since quadcopter is symmetrical
-float rollKp = pitchKp;
-float rollKi = pitchKi;
-float rollKd = pitchKd;
+const float rollKp = pitchKp;
+const float rollKi = pitchKi;
+const float rollKd = pitchKd;
 
-float yawKp = 0;
-float yawKi = 0;
-float yawKd = 0;
+const float yawKp = 1;
+const float yawKi = 0.001;
+const float yawKd = 0;
 
 float previousPitchError;
 float previousRollError;
@@ -41,9 +41,9 @@ int pulseA, pulseB, pulseC, pulseD;
 void PIDCalculator::calculate(int throttleInputChannel, int yawInputChannel, int pitchInputChannel, int rollInputChannel) {
     //lower throttle value by 25% to allow room for pid control
     throttle = map(throttleInputChannel, 1000, 2000, 1000, 1750);
-    yawSetpoint = map(yawInputChannel, 1000, 2000, -25, 25);
-    pitchSetpoint = map(pitchInputChannel, 1000, 2000, -25, 25);
-    rollSetpoint = map(rollInputChannel, 1000, 2000, -25, 25);
+    yawSetpoint = map(yawInputChannel, 1000, 2000, -30, 30);
+    pitchSetpoint = map(pitchInputChannel, 1000, 2000, -30, 30);
+    rollSetpoint = map(rollInputChannel, 1000, 2000, -30, 30);
 
     //limit setpoint to zero around middle of joystick +-20
     if(yawInputChannel < 1510 && yawInputChannel > 1490) yawSetpoint = 0;
@@ -67,7 +67,7 @@ void PIDCalculator::calculateYawPID() {
     previousYawError = errorTemp;
 
     //restrict yaw to maximum values
-    constrain(calculatedYaw, maxYaw * -1, maxYaw);
+    calculatedYaw = constrain(calculatedYaw, maxYaw * -1, maxYaw);
 }
 
 void PIDCalculator::calculatePitchPID() {
@@ -78,7 +78,7 @@ void PIDCalculator::calculatePitchPID() {
     previousPitchError = errorTemp;
 
     //restrict pitch to maximum values
-    constrain(calculatedPitch, maxPitch * -1, maxPitch);
+    calculatedPitch = constrain(calculatedPitch, maxPitch * -1, maxPitch);
 }
 
 void PIDCalculator::calculateRollPID() {
@@ -89,20 +89,20 @@ void PIDCalculator::calculateRollPID() {
     previousRollError = errorTemp;
 
     //restrict roll to maximum values
-    constrain(calculatedRoll, maxRoll * -1, maxRoll);
+    calculatedRoll = constrain(calculatedRoll, maxRoll * -1, maxRoll);
 }
 
 void PIDCalculator::updateMotorPulse() {
     //update individual motor throttle values
-    pulseA = throttle + calculatedPitch + calculatedRoll - calculatedYaw;  //front left motor
-    pulseB = throttle + calculatedPitch - calculatedRoll + calculatedYaw;  //front right motor
-    pulseC = throttle - calculatedPitch + calculatedRoll + calculatedYaw;  //rear left motor
-    pulseD = throttle - calculatedPitch - calculatedRoll - calculatedYaw;  //rear right motor
+    pulseA = throttle - calculatedPitch - calculatedRoll + calculatedYaw;  //front left motor
+    pulseB = throttle - calculatedPitch + calculatedRoll - calculatedYaw;  //front right motor
+    pulseC = throttle + calculatedPitch - calculatedRoll - calculatedYaw;  //rear left motor
+    pulseD = throttle + calculatedPitch + calculatedRoll + calculatedYaw;  //rear right motor
 
-    constrain(pulseA, 1100, 2000);
-    constrain(pulseB, 1100, 2000);
-    constrain(pulseC, 1100, 2000);
-    constrain(pulseD, 1100, 2000);
+    pulseA = constrain(pulseA, 1000, 2000);
+    pulseB = constrain(pulseB, 1000, 2000);
+    pulseC = constrain(pulseC, 1000, 2000);
+    pulseD = constrain(pulseD, 1000, 2000);
 }
 
 int PIDCalculator::getCalculatedPulseA() {

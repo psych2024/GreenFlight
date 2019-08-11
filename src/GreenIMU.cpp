@@ -30,6 +30,13 @@ void GreenIMU::init() {
     mpu.setDMPEnabled(true);
     packetSize = mpu.dmpGetFIFOPacketSize();
 
+    mpu.setXAccelOffset(-2117);
+    mpu.setYAccelOffset(-119);
+    mpu.setZAccelOffset(1610);
+    mpu.setXGyroOffset(83);
+    mpu.setYGyroOffset(206);
+    mpu.setZGyroOffset(16);
+
     Serial.println(F("Successfully initialized imu module!"));
 }
 
@@ -43,7 +50,7 @@ void GreenIMU::updateYPR() {
         return;
     }
 
-    if (fifoCount > packetSize) {
+    if (fifoCount >= packetSize) {
         mpu.getFIFOBytes(fifoBuffer, packetSize);
         fifoCount -= packetSize;
 
@@ -51,9 +58,9 @@ void GreenIMU::updateYPR() {
         mpu.dmpGetGravity(&gravity, &quaternion);
         mpu.dmpGetYawPitchRoll(ypr, &quaternion, &gravity);
 
-        yaw = ypr[0] * 180/M_PI;
-        pitch = ypr[1] * 180/M_PI;
-        roll = ypr[2] * 180/M_PI;
+        yaw = ypr[0] * RAD_TO_DEG;
+        pitch = ypr[1] * RAD_TO_DEG;
+        roll = ypr[2] * RAD_TO_DEG;
     }
 }
 
