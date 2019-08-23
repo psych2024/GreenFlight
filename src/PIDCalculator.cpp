@@ -1,19 +1,20 @@
 #include "HID.h"
 #include "PIDCalculator.h"
 #include "GreenIMU.h"
+#include "EEPROM.h"
 
-const float pitchKp = 1.1;
-const float pitchKi = 0;
-const float pitchKd = 85;
+const float pitchKp = EEPROM.read(PITCH_KP_EEPROM_ADDRESS);
+const float pitchKi = EEPROM.read(PITCH_KI_EEPROM_ADDRESS);
+const float pitchKd = EEPROM.read(PITCH_KD_EEPROM_ADDRESS);
 
 //pid configuration should be the same since quadcopter is symmetrical
 const float rollKp = pitchKp;
 const float rollKi = pitchKi;
 const float rollKd = pitchKd;
 
-const float yawKp = 1;
-const float yawKi = 0.001;
-const float yawKd = 0;
+const float yawKp = EEPROM.read(YAW_KP_EEPROM_ADDRESS);
+const float yawKi = EEPROM.read(YAW_KI_EEPROM_ADDRESS);
+const float yawKd = EEPROM.read(YAW_KD_EEPROM_ADDRESS);
 
 float previousPitchError;
 float previousRollError;
@@ -119,5 +120,29 @@ int PIDCalculator::getCalculatedPulseC() {
 
 int PIDCalculator::getCalculatedPulseD() {
     return pulseD;
+}
+
+void PIDCalculator::updatePitchKp(float kp) {
+    EEPROM.update(PITCH_KP_EEPROM_ADDRESS, kp);
+}
+
+void PIDCalculator::updatePitchKi(float ki) {
+    EEPROM.update(PITCH_KI_EEPROM_ADDRESS, ki);
+}
+
+void PIDCalculator::updatePitchKd(float kd) {
+    EEPROM.update(PITCH_KD_EEPROM_ADDRESS, kd);
+}
+
+void PIDCalculator::updateYawKp(float kp) {
+    EEPROM.update(YAW_KP_EEPROM_ADDRESS, kp);
+}
+
+void PIDCalculator::updateYawKi(float ki) {
+    EEPROM.update(YAW_KI_EEPROM_ADDRESS, ki);
+}
+
+void PIDCalculator::updateYawKd(float kd) {
+    EEPROM.update(YAW_KD_EEPROM_ADDRESS, kd);
 }
 

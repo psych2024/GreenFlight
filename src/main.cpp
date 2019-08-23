@@ -71,6 +71,39 @@ void parseCommand() {
             armed = false;
             digitalWrite(LED_BUILTIN, LOW);
             greenWifi.sendResponse("DISARMED");
+        } else if (*cmd == '?') {
+            char *axis = cmd + 1;
+
+            //P000.000I000.000D000.000
+            char *response = new char[24];
+            response[0] = 'P';
+            response[8] = 'I';
+            response[16] = 'D';
+            if (*axis == 'P' || *axis == 'R') {
+                dtostrf(pitchKp, 7, 3, response + 1);
+                dtostrf(pitchKi, 7, 3, response + 9);
+                dtostrf(pitchKd, 7, 3, response + 17);
+            } else {
+                dtostrf(yawKp, 7, 3, response + 1);
+                dtostrf(yawKi, 7, 3, response + 9);
+                dtostrf(yawKd, 7, 3, response + 17);
+            }
+
+            greenWifi.sendResponse(response);
+        } else if (*cmd == '!') {
+            char *axis = cmd + 1;
+
+            //P000.000I000.000D000.000
+            if (*axis == 'P' || *axis == 'R') {
+                pidCalculator.updatePitchKp(atof(cmd + 1));
+                pidCalculator.updatePitchKi(atof(cmd + 9));
+                pidCalculator.updatePitchKd(atof(cmd + 17));
+            } else {
+                pidCalculator.updateYawKp(atof(cmd + 1));
+                pidCalculator.updateYawKi(atof(cmd + 9));
+                pidCalculator.updateYawKd(atof(cmd + 17));
+            }
+
         } else if (*cmd == 'T') {
             throttleInputChannel = atoi(strtok(cmd, "TYPR"));
             yawInputChannel = atoi(strtok(NULL, "TYPR"));
