@@ -17,13 +17,15 @@ public:
     int getCalculatedPulseC();
     int getCalculatedPulseD();
 
-    void updatePitchKp(float kp);
-    void updatePitchKi(float ki);
-    void updatePitchKd(float kd);
+    static void updatePitchKp(float kp);
+    static void updatePitchKi(float ki);
+    static void updatePitchKd(float kd);
 
-    void updateYawKp(float kp);
-    void updateYawKi(float ki);
-    void updateYawKd(float kd);
+    static void updateYawKp(float kp);
+    static void updateYawKi(float ki);
+    static void updateYawKd(float kd);
+
+    static void initPIDValues();
 private:
     void calculateYawPID();
     void calculatePitchPID();
@@ -33,11 +35,15 @@ private:
 
 extern PIDCalculator pidCalculator;
 
-extern const float pitchKp;
-extern const float pitchKi;
-extern const float pitchKd;
-extern const float yawKp;
-extern const float yawKi;
-extern const float yawKd;
+extern float pitchKp;
+extern float pitchKi;
+extern float pitchKd;
 
+extern float rollKp;
+extern float rollKi;
+extern float rollKd;
+
+extern float yawKp;
+extern float yawKi;
+extern float yawKd;
 #endif

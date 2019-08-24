@@ -14,30 +14,30 @@ float roll;
 MPU6050 mpu;
 
 void GreenIMU::init() {
-    Serial.println(F("Initializing imu module..."));
+    DEBUGL(F("Initializing imu module..."));
 
     Fastwire::setup(400, true);
 
-    Serial.println(F("Initializing MPU6050..."));
+    DEBUGL(F("Initializing MPU6050..."));
     mpu.initialize();
     uint8_t status = mpu.dmpInitialize();
 
     if (status != 0) {
-        Serial.println("Failed to initialise dmp!");
+        DEBUGL("Failed to initialise dmp!");
         while (true);
     }
 
     mpu.setDMPEnabled(true);
     packetSize = mpu.dmpGetFIFOPacketSize();
 
-    mpu.setXAccelOffset(-2117);
-    mpu.setYAccelOffset(-119);
-    mpu.setZAccelOffset(1610);
+    mpu.setXAccelOffset(-2124);
+    mpu.setYAccelOffset(20);
+    mpu.setZAccelOffset(1616);
     mpu.setXGyroOffset(83);
-    mpu.setYGyroOffset(206);
-    mpu.setZGyroOffset(16);
+    mpu.setYGyroOffset(207);
+    mpu.setZGyroOffset(15);
 
-    Serial.println(F("Successfully initialized imu module!"));
+    DEBUGL(F("Successfully initialized imu module!"));
 }
 
 void GreenIMU::updateYPR() {
@@ -61,6 +61,8 @@ void GreenIMU::updateYPR() {
         yaw = ypr[0] * RAD_TO_DEG;
         pitch = ypr[1] * RAD_TO_DEG;
         roll = ypr[2] * RAD_TO_DEG;
+    } else {
+        Serial.println("No fifo");
     }
 }
 

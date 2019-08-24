@@ -3,18 +3,17 @@
 #include "GreenIMU.h"
 #include "EEPROM.h"
 
-const float pitchKp = EEPROM.read(PITCH_KP_EEPROM_ADDRESS);
-const float pitchKi = EEPROM.read(PITCH_KI_EEPROM_ADDRESS);
-const float pitchKd = EEPROM.read(PITCH_KD_EEPROM_ADDRESS);
+float pitchKp;
+float pitchKi;
+float pitchKd;
 
-//pid configuration should be the same since quadcopter is symmetrical
-const float rollKp = pitchKp;
-const float rollKi = pitchKi;
-const float rollKd = pitchKd;
+float rollKp;
+float rollKi;
+float rollKd;
 
-const float yawKp = EEPROM.read(YAW_KP_EEPROM_ADDRESS);
-const float yawKi = EEPROM.read(YAW_KI_EEPROM_ADDRESS);
-const float yawKd = EEPROM.read(YAW_KD_EEPROM_ADDRESS);
+float yawKp;
+float yawKi;
+float yawKd;
 
 float previousPitchError;
 float previousRollError;
@@ -28,9 +27,9 @@ float pitchSetpoint = 0;
 float rollSetpoint = 0;
 float yawSetpoint = 0;
 
-float maxPitch = 200;
-float maxRoll = 200;
-float maxYaw = 200;
+float maxPitch = 300;
+float maxRoll = 300;
+float maxYaw = 300;
 
 float errorTemp;
 
@@ -39,17 +38,32 @@ float calculatedYaw, calculatedPitch, calculatedRoll;
 
 int pulseA, pulseB, pulseC, pulseD;
 
-void PIDCalculator::calculate(int throttleInputChannel, int yawInputChannel, int pitchInputChannel, int rollInputChannel) {
+void PIDCalculator::initPIDValues() {
+    EEPROM.get(PITCH_KP_EEPROM_ADDRESS, pitchKp);
+    EEPROM.get(PITCH_KI_EEPROM_ADDRESS, pitchKi);
+    EEPROM.get(PITCH_KD_EEPROM_ADDRESS, pitchKd);
+
+    rollKp = pitchKp;
+    rollKi = pitchKi;
+    rollKd = pitchKd;
+
+    EEPROM.get(YAW_KP_EEPROM_ADDRESS, yawKp);
+    EEPROM.get(YAW_KI_EEPROM_ADDRESS, yawKi);
+    EEPROM.get(YAW_KD_EEPROM_ADDRESS, yawKd);
+}
+
+void
+PIDCalculator::calculate(int throttleInputChannel, int yawInputChannel, int pitchInputChannel, int rollInputChannel) {
     //lower throttle value by 25% to allow room for pid control
     throttle = map(throttleInputChannel, 1000, 2000, 1000, 1750);
-    yawSetpoint = map(yawInputChannel, 1000, 2000, -30, 30);
-    pitchSetpoint = map(pitchInputChannel, 1000, 2000, -30, 30);
-    rollSetpoint = map(rollInputChannel, 1000, 2000, -30, 30);
+    yawSetpoint = map(yawInputChannel, 1000, 2000, -45, 45);
+    pitchSetpoint = map(pitchInputChannel, 1000, 2000, -45, 45);
+    rollSetpoint = map(rollInputChannel, 1000, 2000, -45, 45);
 
     //limit setpoint to zero around middle of joystick +-20
-    if(yawInputChannel < 1510 && yawInputChannel > 1490) yawSetpoint = 0;
-    if(pitchInputChannel < 1510 && pitchInputChannel > 1490) pitchSetpoint = 0;
-    if(rollInputChannel < 1510 && rollInputChannel > 1490) rollSetpoint = 0;
+    if (yawInputChannel < 1510 && yawInputChannel > 1490) yawSetpoint = 0;
+    if (pitchInputChannel < 1510 && pitchInputChannel > 1490) pitchSetpoint = 0;
+    if (rollInputChannel < 1510 && rollInputChannel > 1490) rollSetpoint = 0;
 
     calculateYawPID();
 
@@ -61,9 +75,17 @@ void PIDCalculator::calculate(int throttleInputChannel, int yawInputChannel, int
 }
 
 void PIDCalculator::calculateYawPID() {
+    //do not include yaw if motor is at rest
+    if(throttle < 1100) {
+        calculatedYaw = 0;
+        return;
+    }
+
     //calculate yaw pid
     errorTemp = yawSetpoint - greenImu.getYaw();
     yawIntegral += errorTemp;
+    yawIntegral = constrain(yawIntegral, maxYaw * -1, maxYaw);
+
     calculatedYaw = errorTemp * yawKp + yawIntegral * yawKi + yawKd * (errorTemp - previousYawError);
     previousYawError = errorTemp;
 
@@ -75,6 +97,8 @@ void PIDCalculator::calculatePitchPID() {
     //calculate pitch pid
     errorTemp = pitchSetpoint - greenImu.getPitch();
     pitchIntegral += errorTemp;
+    pitchIntegral = constrain(pitchIntegral, maxPitch * -1, maxPitch);
+
     calculatedPitch = errorTemp * pitchKp + pitchIntegral * pitchKi + pitchKd * (errorTemp - previousPitchError);
     previousPitchError = errorTemp;
 
@@ -86,6 +110,8 @@ void PIDCalculator::calculateRollPID() {
     //calculate roll pid
     errorTemp = rollSetpoint - greenImu.getRoll();
     rollIntegral += errorTemp;
+    rollIntegral = constrain(rollIntegral, maxRoll * -1, maxRoll);
+
     calculatedRoll = errorTemp * rollKp + rollIntegral * rollKi + rollKd * (errorTemp - previousRollError);
     previousRollError = errorTemp;
 
@@ -100,10 +126,11 @@ void PIDCalculator::updateMotorPulse() {
     pulseC = throttle + calculatedPitch - calculatedRoll - calculatedYaw;  //rear left motor
     pulseD = throttle + calculatedPitch + calculatedRoll + calculatedYaw;  //rear right motor
 
-    pulseA = constrain(pulseA, 1000, 2000);
-    pulseB = constrain(pulseB, 1000, 2000);
-    pulseC = constrain(pulseC, 1000, 2000);
-    pulseD = constrain(pulseD, 1000, 2000);
+    //constrain to minimum 1100us to keep motors running
+    pulseA = constrain(pulseA, 1100, 2000);
+    pulseB = constrain(pulseB, 1100, 2000);
+    pulseC = constrain(pulseC, 1100, 2000);
+    pulseD = constrain(pulseD, 1100, 2000);
 }
 
 int PIDCalculator::getCalculatedPulseA() {
@@ -123,26 +150,25 @@ int PIDCalculator::getCalculatedPulseD() {
 }
 
 void PIDCalculator::updatePitchKp(float kp) {
-    EEPROM.update(PITCH_KP_EEPROM_ADDRESS, kp);
+    EEPROM.put(PITCH_KP_EEPROM_ADDRESS, kp);
 }
 
 void PIDCalculator::updatePitchKi(float ki) {
-    EEPROM.update(PITCH_KI_EEPROM_ADDRESS, ki);
+    EEPROM.put(PITCH_KI_EEPROM_ADDRESS, ki);
 }
 
 void PIDCalculator::updatePitchKd(float kd) {
-    EEPROM.update(PITCH_KD_EEPROM_ADDRESS, kd);
+    EEPROM.put(PITCH_KD_EEPROM_ADDRESS, kd);
 }
 
 void PIDCalculator::updateYawKp(float kp) {
-    EEPROM.update(YAW_KP_EEPROM_ADDRESS, kp);
+    EEPROM.put(YAW_KP_EEPROM_ADDRESS, kp);
 }
 
 void PIDCalculator::updateYawKi(float ki) {
-    EEPROM.update(YAW_KI_EEPROM_ADDRESS, ki);
+    EEPROM.put(YAW_KI_EEPROM_ADDRESS, ki);
 }
 
 void PIDCalculator::updateYawKd(float kd) {
-    EEPROM.update(YAW_KD_EEPROM_ADDRESS, kd);
+    EEPROM.put(YAW_KD_EEPROM_ADDRESS, kd);
 }
-

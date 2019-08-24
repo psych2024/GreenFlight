@@ -2,6 +2,7 @@
 #include "GreenWifi.h"
 #include "GreenIMU.h"
 #include "PIDCalculator.h"
+#include "Debug.h"
 
 /*
  * Quadcopter Motor Labeling
@@ -9,8 +10,12 @@
  *    \ /
  *     +
  *    / \
- * C(6)   D(7)
+ * C(6)   DEBUGL(7)
  */
+
+//TODO: sending response takes a lot of time
+//TODO: Implement PID Library
+//TODO: Define DEBUG Preprocessor
 
 unsigned long programTimer, loopTimer;
 unsigned long timerA, timerB, timerC, timerD;
@@ -29,12 +34,15 @@ void sendESCPulse();
 void parseCommand();
 
 void setup() {
+#ifdef GREENFLIGHT_DEBUG_H
     Serial.begin(115200);
+#endif
     DDRD |= B11110000;
     pinMode(13, OUTPUT);
 
     greenWifi.init();
     greenImu.init();
+    PIDCalculator::initPIDValues();
 }
 
 void loop() {
@@ -47,19 +55,21 @@ void loop() {
     batteryVoltage = (analogRead(0) + 65) * 1.2317;
 
     //though 200hz is 5000us 250us is left as tolerance to prevent mpu6050 buffer overflow
+    //By changing the MPU6050_DMP_FIFO_RATE_DIVISOR from 0x00 to 0x01, there were no changes in the sample rate
+    //I suspect it is because the dmp is not affected by the rate divisor and implements its own rate
     if (micros() - programTimer > 4750) {
-        Serial.println(F("Can't keep up with timer!"));
+        DEBUGL(F("Can't keep up with timer!"));
     }
 
     //rest of the time can be used to parse command
-    while (micros() - programTimer < 4750) parseCommand();
+    while (micros() - programTimer <= 4750) parseCommand();
 }
 
 void parseCommand() {
     char *cmd = greenWifi.fetchCommand();
     if (cmd != nullptr) {
-        Serial.print(F("Received Command: "));
-        Serial.println(cmd);
+        DEBUG(F("Received Command: "));
+        DEBUGL(cmd);
 
         if (strcmp(cmd, "PING") == 0) {
             greenWifi.sendResponse("PONG");
@@ -72,13 +82,11 @@ void parseCommand() {
             digitalWrite(LED_BUILTIN, LOW);
             greenWifi.sendResponse("DISARMED");
         } else if (*cmd == '?') {
+            // ?[YPR]
             char *axis = cmd + 1;
 
-            //P000.000I000.000D000.000
+            // P000.000I000.000D000.000
             char *response = new char[24];
-            response[0] = 'P';
-            response[8] = 'I';
-            response[16] = 'D';
             if (*axis == 'P' || *axis == 'R') {
                 dtostrf(pitchKp, 7, 3, response + 1);
                 dtostrf(pitchKi, 7, 3, response + 9);
@@ -89,21 +97,35 @@ void parseCommand() {
                 dtostrf(yawKd, 7, 3, response + 17);
             }
 
+            response[0] = 'P';
+            response[8] = 'I';
+            response[16] = 'D';
+
             greenWifi.sendResponse(response);
         } else if (*cmd == '!') {
             char *axis = cmd + 1;
 
-            //P000.000I000.000D000.000
+            // !YP000.000I000.000D000.000
+            *(cmd + 10) = '\0';
+            *(cmd + 18) = '\0';
+
             if (*axis == 'P' || *axis == 'R') {
-                pidCalculator.updatePitchKp(atof(cmd + 1));
-                pidCalculator.updatePitchKi(atof(cmd + 9));
-                pidCalculator.updatePitchKd(atof(cmd + 17));
+                PIDCalculator::updatePitchKp(atof(cmd + 3));
+                PIDCalculator::updatePitchKi(atof(cmd + 11));
+                PIDCalculator::updatePitchKd(atof(cmd + 19));
             } else {
-                pidCalculator.updateYawKp(atof(cmd + 1));
-                pidCalculator.updateYawKi(atof(cmd + 9));
-                pidCalculator.updateYawKd(atof(cmd + 17));
+                PIDCalculator::updateYawKp(atof(cmd + 3));
+                PIDCalculator::updateYawKi(atof(cmd + 11));
+                PIDCalculator::updateYawKd(atof(cmd + 19));
             }
 
+            greenWifi.sendResponse("OK");
+
+            while (true) {
+                digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+
+                delay(500);
+            }
         } else if (*cmd == 'T') {
             throttleInputChannel = atoi(strtok(cmd, "TYPR"));
             yawInputChannel = atoi(strtok(NULL, "TYPR"));
@@ -112,7 +134,7 @@ void parseCommand() {
 
             if (throttleInputChannel == 0 || yawInputChannel == 0 ||
                 pitchInputChannel == 0 || rollInputChannel == 0) {
-                Serial.println(F("Failed to parse input"));
+                DEBUGL(F("Failed to parse input"));
             }
 
             throttleInputChannel = constrain(throttleInputChannel, 1000, 2000);
@@ -148,7 +170,7 @@ void sendESCPulse() {
     }
 
     if (micros() - loopTimer > 1000) {
-        Serial.println(F("Doing too much in 1000us!"));
+        DEBUGL(F("Doing too much in 1000us!"));
         return;
     }
 
