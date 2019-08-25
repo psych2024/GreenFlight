@@ -14,16 +14,16 @@ float roll;
 MPU6050 mpu;
 
 void GreenIMU::init() {
-    DEBUGL(F("Initializing imu module..."));
+    Serial.println(F("Initializing imu module..."));
 
     Fastwire::setup(400, true);
 
-    DEBUGL(F("Initializing MPU6050..."));
+    Serial.println(F("Initializing MPU6050..."));
     mpu.initialize();
     uint8_t status = mpu.dmpInitialize();
 
     if (status != 0) {
-        DEBUGL("Failed to initialise dmp!");
+        Serial.println("Failed to initialise dmp!");
         while (true);
     }
 
@@ -37,7 +37,7 @@ void GreenIMU::init() {
     mpu.setYGyroOffset(207);
     mpu.setZGyroOffset(15);
 
-    DEBUGL(F("Successfully initialized imu module!"));
+    Serial.println(F("Successfully initialized imu module!"));
 }
 
 void GreenIMU::updateYPR() {

@@ -6,36 +6,36 @@ WifiStatus wifiStatus = INIT;
 BufferStatus buffStatus = EMPTY;
 
 void GreenWifi::init() {
-    DEBUGL(F("Initializing wifi module..."));
+    Serial.println(F("Initializing wifi module..."));
     
     if (!wifi.begin(WIFI_MODULE_RX_PIN, WIFI_MODULE_TX_PIN, true)) {
-        DEBUGL(F("Error connecting to wifi module!"));
+        Serial.println(F("Error connecting to wifi module!"));
         while (true);
     }
 
     if (!wifi.setMode(WIFI_AP)) {
-        DEBUGL(F("Error setting wifi mode!"));
+        Serial.println(F("Error setting wifi mode!"));
         while (true);
     }
 
     if (!wifi.echo(false)) {
-        DEBUGL(F("Error disabling echo mode!"));
+        Serial.println(F("Error disabling echo mode!"));
         while (true);
     }
 
     if (!wifi.setMux(false)) {
-        DEBUGL(F("Error disabling multiple connections!"));
+        Serial.println(F("Error disabling multiple connections!"));
         while (true);
     }
 
     if (wifi.udpConnect("0", 0, UDP_HOST_PORT, 2)) {
         wifiStatus = WAITING;
     } else {
-        DEBUGL(F("Error establishing udp connection!"));
+        Serial.println(F("Error establishing udp connection!"));
         while (true);
     }
 
-    DEBUGL(F("Successfully initialized wifi module!"));
+    Serial.println(F("Successfully initialized wifi module!"));
 }
 
 char *GreenWifi::fetchCommand() {

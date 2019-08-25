@@ -2,7 +2,6 @@
 #include "GreenWifi.h"
 #include "GreenIMU.h"
 #include "PIDCalculator.h"
-#include "Debug.h"
 
 /*
  * Quadcopter Motor Labeling
@@ -10,12 +9,11 @@
  *    \ /
  *     +
  *    / \
- * C(6)   DEBUGL(7)
+ * C(6)   D(7)
  */
 
 //TODO: sending response takes a lot of time
 //TODO: Implement PID Library
-//TODO: Define DEBUG Preprocessor
 
 unsigned long programTimer, loopTimer;
 unsigned long timerA, timerB, timerC, timerD;
@@ -34,9 +32,7 @@ void sendESCPulse();
 void parseCommand();
 
 void setup() {
-#ifdef GREENFLIGHT_DEBUG_H
     Serial.begin(115200);
-#endif
     DDRD |= B11110000;
     pinMode(13, OUTPUT);
 
@@ -58,7 +54,7 @@ void loop() {
     //By changing the MPU6050_DMP_FIFO_RATE_DIVISOR from 0x00 to 0x01, there were no changes in the sample rate
     //I suspect it is because the dmp is not affected by the rate divisor and implements its own rate
     if (micros() - programTimer > 4750) {
-        DEBUGL(F("Can't keep up with timer!"));
+        Serial.println(F("Can't keep up with timer!"));
     }
 
     //rest of the time can be used to parse command
@@ -68,8 +64,8 @@ void loop() {
 void parseCommand() {
     char *cmd = greenWifi.fetchCommand();
     if (cmd != nullptr) {
-        DEBUG(F("Received Command: "));
-        DEBUGL(cmd);
+        Serial.print(F("Received Command: "));
+        Serial.println(cmd);
 
         if (strcmp(cmd, "PING") == 0) {
             greenWifi.sendResponse("PONG");
@@ -134,7 +130,7 @@ void parseCommand() {
 
             if (throttleInputChannel == 0 || yawInputChannel == 0 ||
                 pitchInputChannel == 0 || rollInputChannel == 0) {
-                DEBUGL(F("Failed to parse input"));
+                Serial.println(F("Failed to parse input"));
             }
 
             throttleInputChannel = constrain(throttleInputChannel, 1000, 2000);
@@ -170,7 +166,7 @@ void sendESCPulse() {
     }
 
     if (micros() - loopTimer > 1000) {
-        DEBUGL(F("Doing too much in 1000us!"));
+        Serial.println(F("Doing too much in 1000us!"));
         return;
     }
 
