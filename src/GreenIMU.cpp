@@ -42,6 +42,7 @@ void GreenIMU::init() {
 
 void GreenIMU::updateYPR() {
     fifoCount = mpu.getFIFOCount();
+    Serial.println(fifoCount);
 
     if (fifoCount >= 1024) {
         mpu.resetFIFO();

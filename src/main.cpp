@@ -139,6 +139,9 @@ void parseCommand() {
             rollInputChannel = constrain(rollInputChannel, 1000, 2000);
 
         } else if (*cmd == 'V') {
+            if(armed)
+                return;
+
             char buff[5];
             sprintf(buff, "V%d", batteryVoltage);
             greenWifi.sendResponse(buff);

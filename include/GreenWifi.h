@@ -3,15 +3,9 @@
 
 #include "Arduino.h"
 #include "CytronWiFiShield.h"
-#include "Debug.h"
 
-#ifdef GREENFLIGHT_DEBUG_H
-    #define WIFI_MODULE_RX_PIN 0
-    #define WIFI_MODULE_TX_PIN 1
-#else
-    #define WIFI_MODULE_RX_PIN 8
-    #define WIFI_MODULE_TX_PIN 9
-#endif
+#define WIFI_MODULE_RX_PIN 8
+#define WIFI_MODULE_TX_PIN 9
 
 #define COMMAND_BUFFER_SIZE 64
 #define UDP_HOST_PORT 333
@@ -27,11 +21,14 @@ enum BufferStatus {
 class GreenWifi {
 public:
     void init();
+
     char *fetchCommand();
-    void sendResponse(const char* buff);
+
+    void sendResponse(const char *buff);
 
 private:
     void readForStartPoint();
+
     char *readForEndPoint();
 };
 
