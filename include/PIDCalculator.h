@@ -26,24 +26,16 @@ public:
     static void updateYawKd(float kd);
 
     static void initPIDValues();
+
+    static float yawKp, yawKi, yawKd;
+    static float pitchKp, pitchKi, pitchKd;
+    static float rollKp, rollKi, rollKd;
 private:
     void calculateYawPID();
     void calculatePitchPID();
     void calculateRollPID();
-    void updateMotorPulse();
+    static void updateMotorPulse();
 };
 
 extern PIDCalculator pidCalculator;
-
-extern float pitchKp;
-extern float pitchKi;
-extern float pitchKd;
-
-extern float rollKp;
-extern float rollKi;
-extern float rollKd;
-
-extern float yawKp;
-extern float yawKi;
-extern float yawKd;
 #endif

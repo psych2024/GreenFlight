@@ -84,13 +84,13 @@ void parseCommand() {
             // P000.000I000.000D000.000
             char *response = new char[24];
             if (*axis == 'P' || *axis == 'R') {
-                dtostrf(pitchKp, 7, 3, response + 1);
-                dtostrf(pitchKi, 7, 3, response + 9);
-                dtostrf(pitchKd, 7, 3, response + 17);
+                dtostrf(PIDCalculator::pitchKp, 7, 3, response + 1);
+                dtostrf(PIDCalculator::pitchKi, 7, 3, response + 9);
+                dtostrf(PIDCalculator::pitchKd, 7, 3, response + 17);
             } else {
-                dtostrf(yawKp, 7, 3, response + 1);
-                dtostrf(yawKi, 7, 3, response + 9);
-                dtostrf(yawKd, 7, 3, response + 17);
+                dtostrf(PIDCalculator::yawKp, 7, 3, response + 1);
+                dtostrf(PIDCalculator::yawKi, 7, 3, response + 9);
+                dtostrf(PIDCalculator::yawKd, 7, 3, response + 17);
             }
 
             response[0] = 'P';
@@ -139,7 +139,7 @@ void parseCommand() {
             rollInputChannel = constrain(rollInputChannel, 1000, 2000);
 
         } else if (*cmd == 'V') {
-            if(armed)
+            if (armed)
                 return;
 
             char buff[5];
@@ -154,7 +154,8 @@ void sendESCPulse() {
     PORTD |= B11110000;
 
     //Do pid calculations with compulsory 1000us free time
-    pidCalculator.calculate(throttleInputChannel, yawInputChannel, pitchInputChannel, rollInputChannel);
+    pidCalculator.calculate(throttleInputChannel, yawInputChannel, pitchInputChannel,
+                            rollInputChannel);
 
     if (armed) {
         timerA = loopTimer + pidCalculator.getCalculatedPulseA();

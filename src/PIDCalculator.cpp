@@ -3,35 +3,36 @@
 #include "GreenIMU.h"
 #include "EEPROM.h"
 
-float pitchKp;
-float pitchKi;
-float pitchKd;
+float PIDCalculator::pitchKp;
+float PIDCalculator::pitchKi;
+float PIDCalculator::pitchKd;
 
-float rollKp;
-float rollKi;
-float rollKd;
+float PIDCalculator::rollKp;
+float PIDCalculator::rollKi;
+float PIDCalculator::rollKd;
 
-float yawKp;
-float yawKi;
-float yawKd;
+float PIDCalculator::yawKp;
+float PIDCalculator::yawKi;
+float PIDCalculator::yawKd;
 
-float previousPitchError;
-float previousRollError;
-float previousYawError;
+float previousYawInput;
+float previousPitchInput;
+float previousRollInput;
 
+float yawIntegral;
 float pitchIntegral;
 float rollIntegral;
-float yawIntegral;
 
+float yawSetpoint = 0;
 float pitchSetpoint = 0;
 float rollSetpoint = 0;
-float yawSetpoint = 0;
 
-float maxPitch = 300;
-float maxRoll = 300;
 float maxYaw = 300;
+float maxPitch = 300;
+float maxRoll = maxPitch;
 
 float errorTemp;
+float inputTemp;
 
 int throttle;
 float calculatedYaw, calculatedPitch, calculatedRoll;
@@ -52,10 +53,10 @@ void PIDCalculator::initPIDValues() {
     EEPROM.get(YAW_KD_EEPROM_ADDRESS, yawKd);
 }
 
-void
-PIDCalculator::calculate(int throttleInputChannel, int yawInputChannel, int pitchInputChannel, int rollInputChannel) {
-    //lower throttle value by 25% to allow room for pid control
-    throttle = map(throttleInputChannel, 1000, 2000, 1000, 1750);
+void PIDCalculator::calculate(int throttleInputChannel, int yawInputChannel, int pitchInputChannel,
+                              int rollInputChannel) {
+    //lower throttle value by ~25% to allow room for pid control
+    throttle = map(throttleInputChannel, 1000, 2000, 1000, 1700);
     yawSetpoint = map(yawInputChannel, 1000, 2000, -45, 45);
     pitchSetpoint = map(pitchInputChannel, 1000, 2000, -45, 45);
     rollSetpoint = map(rollInputChannel, 1000, 2000, -45, 45);
@@ -76,18 +77,20 @@ PIDCalculator::calculate(int throttleInputChannel, int yawInputChannel, int pitc
 
 void PIDCalculator::calculateYawPID() {
     //do not include yaw if motor is at rest
-    if(throttle < 1100) {
+    if (throttle < 1100) {
         calculatedYaw = 0;
         return;
     }
 
     //calculate yaw pid
-    errorTemp = yawSetpoint - greenImu.getYaw();
+    inputTemp = greenImu.getYaw();
+    errorTemp = yawSetpoint - inputTemp;
     yawIntegral += errorTemp;
     yawIntegral = constrain(yawIntegral, maxYaw * -1, maxYaw);
 
-    calculatedYaw = errorTemp * yawKp + yawIntegral * yawKi + yawKd * (errorTemp - previousYawError);
-    previousYawError = errorTemp;
+    calculatedYaw =
+            errorTemp * yawKp + yawIntegral * yawKi - yawKd * (inputTemp - previousYawInput);
+    previousYawInput = inputTemp;
 
     //restrict yaw to maximum values
     calculatedYaw = constrain(calculatedYaw, maxYaw * -1, maxYaw);
@@ -95,12 +98,14 @@ void PIDCalculator::calculateYawPID() {
 
 void PIDCalculator::calculatePitchPID() {
     //calculate pitch pid
-    errorTemp = pitchSetpoint - greenImu.getPitch();
+    inputTemp = greenImu.getPitch();
+    errorTemp = pitchSetpoint - inputTemp;
     pitchIntegral += errorTemp;
     pitchIntegral = constrain(pitchIntegral, maxPitch * -1, maxPitch);
 
-    calculatedPitch = errorTemp * pitchKp + pitchIntegral * pitchKi + pitchKd * (errorTemp - previousPitchError);
-    previousPitchError = errorTemp;
+    calculatedPitch = errorTemp * pitchKp + pitchIntegral * pitchKi -
+                      pitchKd * (inputTemp - previousPitchInput);
+    previousPitchInput = inputTemp;
 
     //restrict pitch to maximum values
     calculatedPitch = constrain(calculatedPitch, maxPitch * -1, maxPitch);
@@ -108,12 +113,14 @@ void PIDCalculator::calculatePitchPID() {
 
 void PIDCalculator::calculateRollPID() {
     //calculate roll pid
-    errorTemp = rollSetpoint - greenImu.getRoll();
+    inputTemp = greenImu.getRoll();
+    errorTemp = rollSetpoint - inputTemp;
     rollIntegral += errorTemp;
     rollIntegral = constrain(rollIntegral, maxRoll * -1, maxRoll);
 
-    calculatedRoll = errorTemp * rollKp + rollIntegral * rollKi + rollKd * (errorTemp - previousRollError);
-    previousRollError = errorTemp;
+    calculatedRoll =
+            errorTemp * rollKp + rollIntegral * rollKi - rollKd * (inputTemp - previousRollInput);
+    previousRollInput = inputTemp;
 
     //restrict roll to maximum values
     calculatedRoll = constrain(calculatedRoll, maxRoll * -1, maxRoll);
