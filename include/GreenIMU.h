@@ -12,9 +12,12 @@ class GreenIMU {
 public:
     void init();
     void updateYPR();
-    float getPitch();
-    float getYaw();
-    float getRoll();
+    float * getPitchAngle();
+    float * getYawAngle();
+    float * getRollAngle();
+    float * getPitchRate();
+    float * getYawRate();
+    float * getRollRate();
 };
 
 extern GreenIMU greenImu;

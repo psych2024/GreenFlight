@@ -1,137 +1,144 @@
 #include "HID.h"
 #include "PIDCalculator.h"
-#include "GreenIMU.h"
 #include "EEPROM.h"
 
-float PIDCalculator::pitchKp;
-float PIDCalculator::pitchKi;
-float PIDCalculator::pitchKd;
+PIDCalculator pidCalculator;
 
-float PIDCalculator::rollKp;
-float PIDCalculator::rollKi;
-float PIDCalculator::rollKd;
+float PIDCalculator::yawAngleKp;
+float PIDCalculator::yawAngleKi;
+float PIDCalculator::yawAngleKd;
 
-float PIDCalculator::yawKp;
-float PIDCalculator::yawKi;
-float PIDCalculator::yawKd;
+float PIDCalculator::pitchAngleKp;
+float PIDCalculator::pitchAngleKi;
+float PIDCalculator::pitchAngleKd;
 
-float previousYawInput;
-float previousPitchInput;
-float previousRollInput;
+float PIDCalculator::rollAngleKp;
+float PIDCalculator::rollAngleKi;
+float PIDCalculator::rollAngleKd;
 
-float yawIntegral;
-float pitchIntegral;
-float rollIntegral;
+float PIDCalculator::yawRateKp;
+float PIDCalculator::yawRateKi;
+float PIDCalculator::yawRateKd;
 
-float yawSetpoint = 0;
-float pitchSetpoint = 0;
-float rollSetpoint = 0;
+float PIDCalculator::pitchRateKp;
+float PIDCalculator::pitchRateKi;
+float PIDCalculator::pitchRateKd;
+
+float PIDCalculator::rollRateKp;
+float PIDCalculator::rollRateKi;
+float PIDCalculator::rollRateKd;
+
+float throttle;
 
 float maxYaw = 300;
 float maxPitch = 300;
-float maxRoll = maxPitch;
+float maxRoll = 300;
 
-float errorTemp;
-float inputTemp;
+int MODE = RATE_MODE;
 
-int throttle;
-float calculatedYaw, calculatedPitch, calculatedRoll;
+int inputBuffer[150];
+int setPointBuffer[150];
+int counter = 0;
+int intervalCounter = 0;
 
-int pulseA, pulseB, pulseC, pulseD;
+PIDCalculator::PIDCalculator() :
+yawAnglePid(greenImu.getYawAngle(), &yawRateSetpoint, &yawAngleSetpoint, 0, 0, 0, DIRECT, SAMPLE_RATE_MILLS),
+yawRatePid(greenImu.getYawRate(), &yawOutput, &yawRateSetpoint, 0, 0, 0, DIRECT, SAMPLE_RATE_MILLS),
+
+pitchAnglePid(greenImu.getPitchAngle(), &pitchRateSetpoint, &pitchAngleSetpoint, 0, 0, 0, DIRECT, SAMPLE_RATE_MILLS),
+pitchRatePid(greenImu.getPitchRate(), &pitchOutput, &pitchRateSetpoint, 0, 0, 0, DIRECT, SAMPLE_RATE_MILLS),
+
+rollAnglePid(greenImu.getRollAngle(), &rollRateSetpoint, &rollAngleSetpoint, 0, 0, 0, DIRECT, SAMPLE_RATE_MILLS),
+rollRatePid(greenImu.getRollRate(), &rollOutput, &rollRateSetpoint, 0, 0, 0, DIRECT, SAMPLE_RATE_MILLS)
+{
+    initPIDValues();
+    yawRatePid.SetOutputLimits(-maxYaw, maxYaw);
+    yawAnglePid.SetOutputLimits(-maxYaw, maxYaw);
+    yawRatePid.SetTunings(yawRateKp, yawRateKi, yawRateKd);
+    yawAnglePid.SetTunings(yawAngleKp, yawAngleKi, yawAngleKd);
+
+    pitchRatePid.SetOutputLimits(-maxPitch, maxPitch);
+    pitchAnglePid.SetOutputLimits(-maxPitch, maxPitch);
+    pitchRatePid.SetTunings(pitchRateKp, pitchRateKi, pitchRateKd);
+    pitchAnglePid.SetTunings(pitchAngleKp, pitchAngleKi, pitchAngleKd);
+
+    rollRatePid.SetOutputLimits(-maxRoll, maxRoll);
+    rollAnglePid.SetOutputLimits(-maxRoll, maxRoll);
+    rollRatePid.SetTunings(rollRateKp, rollRateKi, rollRateKd);
+    rollAnglePid.SetTunings(rollAngleKp, rollAngleKi, rollAngleKd);
+}
 
 void PIDCalculator::initPIDValues() {
-    EEPROM.get(PITCH_KP_EEPROM_ADDRESS, pitchKp);
-    EEPROM.get(PITCH_KI_EEPROM_ADDRESS, pitchKi);
-    EEPROM.get(PITCH_KD_EEPROM_ADDRESS, pitchKd);
+    //angle pid
+    EEPROM.get(ANGLE_PITCH_KP_EEPROM_ADDRESS, pitchAngleKp);
+    EEPROM.get(ANGLE_PITCH_KI_EEPROM_ADDRESS, pitchAngleKi);
+    EEPROM.get(ANGLE_PITCH_KD_EEPROM_ADDRESS, pitchAngleKd);
 
-    rollKp = pitchKp;
-    rollKi = pitchKi;
-    rollKd = pitchKd;
+    rollAngleKp = pitchAngleKp;
+    rollAngleKi = pitchAngleKi;
+    rollAngleKd = pitchAngleKd;
 
-    EEPROM.get(YAW_KP_EEPROM_ADDRESS, yawKp);
-    EEPROM.get(YAW_KI_EEPROM_ADDRESS, yawKi);
-    EEPROM.get(YAW_KD_EEPROM_ADDRESS, yawKd);
+    EEPROM.get(ANGLE_YAW_KP_EEPROM_ADDRESS, yawAngleKp);
+    EEPROM.get(ANGLE_YAW_KI_EEPROM_ADDRESS, yawAngleKi);
+    EEPROM.get(ANGLE_YAW_KD_EEPROM_ADDRESS, yawAngleKd);
+
+    //rate pid
+    EEPROM.get(RATE_PITCH_KP_EEPROM_ADDRESS, pitchRateKp);
+    EEPROM.get(RATE_PITCH_KI_EEPROM_ADDRESS, pitchRateKi);
+    EEPROM.get(RATE_PITCH_KD_EEPROM_ADDRESS, pitchRateKd);
+
+    rollRateKp = pitchRateKp;
+    rollRateKi = pitchRateKi;
+    rollRateKd = pitchRateKd;
+
+    EEPROM.get(RATE_YAW_KP_EEPROM_ADDRESS, yawRateKp);
+    EEPROM.get(RATE_YAW_KI_EEPROM_ADDRESS, yawRateKi);
+    EEPROM.get(RATE_YAW_KD_EEPROM_ADDRESS, yawRateKd);
 }
+
 
 void PIDCalculator::calculate(int throttleInputChannel, int yawInputChannel, int pitchInputChannel,
                               int rollInputChannel) {
     //lower throttle value by ~25% to allow room for pid control
     throttle = map(throttleInputChannel, 1000, 2000, 1000, 1700);
-    yawSetpoint = map(yawInputChannel, 1000, 2000, -45, 45);
-    pitchSetpoint = map(pitchInputChannel, 1000, 2000, -45, 45);
-    rollSetpoint = map(rollInputChannel, 1000, 2000, -45, 45);
 
-    //limit setpoint to zero around middle of joystick +-20
-    if (yawInputChannel < 1510 && yawInputChannel > 1490) yawSetpoint = 0;
-    if (pitchInputChannel < 1510 && pitchInputChannel > 1490) pitchSetpoint = 0;
-    if (rollInputChannel < 1510 && rollInputChannel > 1490) rollSetpoint = 0;
+    if (MODE == RATE_MODE) {
+        yawRateSetpoint = map(yawInputChannel, 1000, 2000, -350, 350);
+        pitchRateSetpoint = map(pitchInputChannel, 1000, 2000, -250, 250);
+        rollRateSetpoint = map(rollInputChannel, 1000, 2000, -250, 250);
+    } else {
+        yawAngleSetpoint = map(yawInputChannel, 1000, 2000, -30, 30);
+        pitchAngleSetpoint = map(pitchInputChannel, 1000, 2000, -30, 30);
+        rollAngleSetpoint = map(rollInputChannel, 1000, 2000, -30, 30);
 
-    calculateYawPID();
+        //limit setpoint to zero around middle of joystick +-20
+        if (yawInputChannel < 1510 && yawInputChannel > 1490) yawAngleSetpoint = 0;
+        if (pitchInputChannel < 1510 && pitchInputChannel > 1490) pitchAngleSetpoint = 0;
+        if (rollInputChannel < 1510 && rollInputChannel > 1490) rollAngleSetpoint = 0;
+    }
 
-    calculatePitchPID();
-
-    calculateRollPID();
-
+    calculatePID();
     updateMotorPulse();
 }
 
-void PIDCalculator::calculateYawPID() {
-    //do not include yaw if motor is at rest
-    if (throttle < 1100) {
-        calculatedYaw = 0;
-        return;
+void PIDCalculator::calculatePID() {
+    if(MODE == ANGLE_MODE) {
+        yawAnglePid.Compute();
+        pitchAnglePid.Compute();
+        rollAnglePid.Compute();
     }
-
-    //calculate yaw pid
-    inputTemp = greenImu.getYaw();
-    errorTemp = yawSetpoint - inputTemp;
-    yawIntegral += errorTemp;
-    yawIntegral = constrain(yawIntegral, maxYaw * -1, maxYaw);
-
-    calculatedYaw =
-            errorTemp * yawKp + yawIntegral * yawKi - yawKd * (inputTemp - previousYawInput);
-    previousYawInput = inputTemp;
-
-    //restrict yaw to maximum values
-    calculatedYaw = constrain(calculatedYaw, maxYaw * -1, maxYaw);
-}
-
-void PIDCalculator::calculatePitchPID() {
-    //calculate pitch pid
-    inputTemp = greenImu.getPitch();
-    errorTemp = pitchSetpoint - inputTemp;
-    pitchIntegral += errorTemp;
-    pitchIntegral = constrain(pitchIntegral, maxPitch * -1, maxPitch);
-
-    calculatedPitch = errorTemp * pitchKp + pitchIntegral * pitchKi -
-                      pitchKd * (inputTemp - previousPitchInput);
-    previousPitchInput = inputTemp;
-
-    //restrict pitch to maximum values
-    calculatedPitch = constrain(calculatedPitch, maxPitch * -1, maxPitch);
-}
-
-void PIDCalculator::calculateRollPID() {
-    //calculate roll pid
-    inputTemp = greenImu.getRoll();
-    errorTemp = rollSetpoint - inputTemp;
-    rollIntegral += errorTemp;
-    rollIntegral = constrain(rollIntegral, maxRoll * -1, maxRoll);
-
-    calculatedRoll =
-            errorTemp * rollKp + rollIntegral * rollKi - rollKd * (inputTemp - previousRollInput);
-    previousRollInput = inputTemp;
-
-    //restrict roll to maximum values
-    calculatedRoll = constrain(calculatedRoll, maxRoll * -1, maxRoll);
+    
+    yawRatePid.Compute();
+    pitchRatePid.Compute();
+    rollRatePid.Compute();
 }
 
 void PIDCalculator::updateMotorPulse() {
     //update individual motor throttle values
-    pulseA = throttle - calculatedPitch - calculatedRoll + calculatedYaw;  //front left motor
-    pulseB = throttle - calculatedPitch + calculatedRoll - calculatedYaw;  //front right motor
-    pulseC = throttle + calculatedPitch - calculatedRoll - calculatedYaw;  //rear left motor
-    pulseD = throttle + calculatedPitch + calculatedRoll + calculatedYaw;  //rear right motor
+    pulseA = throttle - pitchOutput - rollOutput + yawOutput;  //front left motor
+    pulseB = throttle - pitchOutput + rollOutput - yawOutput;  //front right motor
+    pulseC = throttle + pitchOutput - rollOutput - yawOutput;  //rear left motor
+    pulseD = throttle + pitchOutput + rollOutput + yawOutput;  //rear right motor
 
     //constrain to minimum 1100us to keep motors running
     pulseA = constrain(pulseA, 1100, 2000);
@@ -156,26 +163,26 @@ int PIDCalculator::getCalculatedPulseD() {
     return pulseD;
 }
 
-void PIDCalculator::updatePitchKp(float kp) {
-    EEPROM.put(PITCH_KP_EEPROM_ADDRESS, kp);
+void PIDCalculator::updateRatePID(Axis axis, float kp, float ki, float kd) {
+    if(axis == YAW) {
+        EEPROM.put(RATE_YAW_KP_EEPROM_ADDRESS, kp);
+        EEPROM.put(RATE_YAW_KI_EEPROM_ADDRESS, ki);
+        EEPROM.put(RATE_YAW_KD_EEPROM_ADDRESS, kd);
+    } else if (axis == PITCH || axis == ROLL) {
+        EEPROM.put(RATE_PITCH_KP_EEPROM_ADDRESS, kp);
+        EEPROM.put(RATE_PITCH_KI_EEPROM_ADDRESS, ki);
+        EEPROM.put(RATE_PITCH_KD_EEPROM_ADDRESS, kd);
+    }
 }
 
-void PIDCalculator::updatePitchKi(float ki) {
-    EEPROM.put(PITCH_KI_EEPROM_ADDRESS, ki);
-}
-
-void PIDCalculator::updatePitchKd(float kd) {
-    EEPROM.put(PITCH_KD_EEPROM_ADDRESS, kd);
-}
-
-void PIDCalculator::updateYawKp(float kp) {
-    EEPROM.put(YAW_KP_EEPROM_ADDRESS, kp);
-}
-
-void PIDCalculator::updateYawKi(float ki) {
-    EEPROM.put(YAW_KI_EEPROM_ADDRESS, ki);
-}
-
-void PIDCalculator::updateYawKd(float kd) {
-    EEPROM.put(YAW_KD_EEPROM_ADDRESS, kd);
+void PIDCalculator::updateAnglePID(Axis axis, float kp, float ki, float kd) {
+    if(axis == YAW) {
+        EEPROM.put(ANGLE_YAW_KP_EEPROM_ADDRESS, kp);
+        EEPROM.put(ANGLE_YAW_KI_EEPROM_ADDRESS, ki);
+        EEPROM.put(ANGLE_YAW_KD_EEPROM_ADDRESS, kd);
+    } else if (axis == PITCH || axis == ROLL) {
+        EEPROM.put(ANGLE_PITCH_KP_EEPROM_ADDRESS, kp);
+        EEPROM.put(ANGLE_PITCH_KI_EEPROM_ADDRESS, ki);
+        EEPROM.put(ANGLE_PITCH_KD_EEPROM_ADDRESS, kd);
+    }
 }

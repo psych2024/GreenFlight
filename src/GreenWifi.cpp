@@ -5,6 +5,8 @@ uint8_t marker = 0;
 WifiStatus wifiStatus = INIT;
 BufferStatus buffStatus = EMPTY;
 
+GreenWifi greenWifi;
+
 void GreenWifi::init() {
     Serial.println(F("Initializing wifi module..."));
     

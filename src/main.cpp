@@ -5,15 +5,17 @@
 
 /*
  * Quadcopter Motor Labeling
- * A(4)   B(5)
- *    \ /
- *     +
- *    / \
- * C(6)   D(7)
+ *
+ *         +p(.)
+ *                  +y (clockwise)
+ *      A(4)   B(5)
+ *          \ /
+ *   +r(.)   +
+ *          / \
+ *      C(6)   D(7)
  */
 
 //TODO: sending response takes a lot of time
-//TODO: Implement PID Library
 
 unsigned long programTimer, loopTimer;
 unsigned long timerA, timerB, timerC, timerD;
@@ -36,12 +38,31 @@ void setup() {
     DDRD |= B11110000;
     pinMode(13, OUTPUT);
 
+    unsigned long t = micros();
+    AltSoftSerial s(8, 9);
+    s.begin(9600);
+    s.print( F("this is a test"));
+    Serial.println(micros() - t);
+    while (true) {}
+
     greenWifi.init();
     greenImu.init();
-    PIDCalculator::initPIDValues();
 }
 
 void loop() {
+    if (Serial.available()) {
+        extern int inputBuffer[];
+        extern int setPointBuffer[];
+
+        for (int i = 0; i < 150; i++) {
+            Serial.print(setPointBuffer[i] / 1000);
+            Serial.print(",");
+            Serial.println(inputBuffer[i] / 1000);
+        }
+        while (true) {
+        }
+    }
+
     programTimer = micros();
 
     sendESCPulse();
@@ -78,41 +99,52 @@ void parseCommand() {
             digitalWrite(LED_BUILTIN, LOW);
             greenWifi.sendResponse("DISARMED");
         } else if (*cmd == '?') {
-            // ?[YPR]
-            char *axis = cmd + 1;
+            // ?[AR][YPR]
+            char *mode = cmd + 1;
+            Axis axis = *(cmd + 2) == 'Y' ? YAW : PITCH;
 
             // P000.000I000.000D000.000
             char *response = new char[24];
-            if (*axis == 'P' || *axis == 'R') {
-                dtostrf(PIDCalculator::pitchKp, 7, 3, response + 1);
-                dtostrf(PIDCalculator::pitchKi, 7, 3, response + 9);
-                dtostrf(PIDCalculator::pitchKd, 7, 3, response + 17);
+            if (*mode == 'A') {
+                if (axis == PITCH) {
+                    dtostrf(PIDCalculator::pitchAngleKp, 7, 3, response + 1);
+                    dtostrf(PIDCalculator::pitchAngleKi, 7, 3, response + 9);
+                    dtostrf(PIDCalculator::pitchAngleKd, 7, 3, response + 17);
+                } else {
+                    dtostrf(PIDCalculator::yawAngleKp, 7, 3, response + 1);
+                    dtostrf(PIDCalculator::yawAngleKi, 7, 3, response + 9);
+                    dtostrf(PIDCalculator::yawAngleKd, 7, 3, response + 17);
+                }
             } else {
-                dtostrf(PIDCalculator::yawKp, 7, 3, response + 1);
-                dtostrf(PIDCalculator::yawKi, 7, 3, response + 9);
-                dtostrf(PIDCalculator::yawKd, 7, 3, response + 17);
+                if (axis == PITCH) {
+                    dtostrf(PIDCalculator::pitchRateKp, 7, 3, response + 1);
+                    dtostrf(PIDCalculator::pitchRateKi, 7, 3, response + 9);
+                    dtostrf(PIDCalculator::pitchRateKd, 7, 3, response + 17);
+                } else {
+                    dtostrf(PIDCalculator::yawRateKp, 7, 3, response + 1);
+                    dtostrf(PIDCalculator::yawRateKi, 7, 3, response + 9);
+                    dtostrf(PIDCalculator::yawRateKd, 7, 3, response + 17);
+                }
             }
 
             response[0] = 'P';
             response[8] = 'I';
             response[16] = 'D';
 
+            Serial.println(response);
             greenWifi.sendResponse(response);
         } else if (*cmd == '!') {
-            char *axis = cmd + 1;
+            char *mode = cmd + 1;
+            Axis axis = *(cmd + 2) == 'Y' ? YAW : PITCH;
 
-            // !YP000.000I000.000D000.000
-            *(cmd + 10) = '\0';
-            *(cmd + 18) = '\0';
+            // !AYP000.000I000.000D000.000
+            *(cmd + 11) = '\0';
+            *(cmd + 19) = '\0';
 
-            if (*axis == 'P' || *axis == 'R') {
-                PIDCalculator::updatePitchKp(atof(cmd + 3));
-                PIDCalculator::updatePitchKi(atof(cmd + 11));
-                PIDCalculator::updatePitchKd(atof(cmd + 19));
+            if (*mode == 'A') {
+                PIDCalculator::updateAnglePID(axis, atof(cmd + 4), atof(cmd + 12), atof(cmd + 20));
             } else {
-                PIDCalculator::updateYawKp(atof(cmd + 3));
-                PIDCalculator::updateYawKi(atof(cmd + 11));
-                PIDCalculator::updateYawKd(atof(cmd + 19));
+                PIDCalculator::updateRatePID(axis, atof(cmd + 4), atof(cmd + 12), atof(cmd + 20));
             }
 
             greenWifi.sendResponse("OK");
