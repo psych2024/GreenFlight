@@ -2,17 +2,31 @@
 #include "GreenWifi.h"
 #include "GreenIMU.h"
 #include "PIDCalculator.h"
+#include "SDLogger.cpp"
+
+//Latest Rate PID
+//P 5.1
+//I 2.0
+//D 0.018
+
+//Latest Angle PID
+//P 0.6
+//I 0
+//D 0.001
 
 /*
  * Quadcopter Motor Labeling
  *
  *         +p(.)
+ *
+ *         FRONT
  *                  +y (clockwise)
- *      A(4)   B(5)
+ *      D(7)   C(6)
  *          \ /
  *   +r(.)   +
  *          / \
- *      C(6)   D(7)
+ *      B(5)   A(4)
+ *
  */
 
 //TODO: sending response takes a lot of time
@@ -38,31 +52,13 @@ void setup() {
     DDRD |= B11110000;
     pinMode(13, OUTPUT);
 
-    unsigned long t = micros();
-    AltSoftSerial s(8, 9);
-    s.begin(9600);
-    s.print( F("this is a test"));
-    Serial.println(micros() - t);
-    while (true) {}
-
+    initSD();
+    openBinFile();
     greenWifi.init();
     greenImu.init();
 }
 
 void loop() {
-    if (Serial.available()) {
-        extern int inputBuffer[];
-        extern int setPointBuffer[];
-
-        for (int i = 0; i < 150; i++) {
-            Serial.print(setPointBuffer[i] / 1000);
-            Serial.print(",");
-            Serial.println(inputBuffer[i] / 1000);
-        }
-        while (true) {
-        }
-    }
-
     programTimer = micros();
 
     sendESCPulse();
@@ -75,7 +71,12 @@ void loop() {
     //By changing the MPU6050_DMP_FIFO_RATE_DIVISOR from 0x00 to 0x01, there were no changes in the sample rate
     //I suspect it is because the dmp is not affected by the rate divisor and implements its own rate
     if (micros() - programTimer > 4750) {
-        Serial.println(F("Can't keep up with timer!"));
+        //Serial.println(F("Can't keep up with timer!"));
+        armed = false;
+        sendESCPulse();
+        digitalWrite(LED_BUILTIN, HIGH);
+
+        //while (true) {}
     }
 
     //rest of the time can be used to parse command
@@ -88,15 +89,19 @@ void parseCommand() {
         Serial.print(F("Received Command: "));
         Serial.println(cmd);
 
-        if (strcmp(cmd, "PING") == 0) {
+        if (strcmp_P(cmd, PSTR("PING")) == 0) {
             greenWifi.sendResponse("PONG");
-        } else if (strcmp(cmd, "ARM") == 0) {
+        } else if (strcmp_P(cmd, PSTR("ARM")) == 0) {
             armed = true;
+            pidCalculator.enablePid();
             digitalWrite(LED_BUILTIN, HIGH);
+            recordBinFile();
             greenWifi.sendResponse("ARMED");
-        } else if (strcmp(cmd, "DISARM") == 0) {
+        } else if (strcmp_P(cmd, PSTR("DISARM")) == 0) {
             armed = false;
+            pidCalculator.disablePid();
             digitalWrite(LED_BUILTIN, LOW);
+            closeBinFile();
             greenWifi.sendResponse("DISARMED");
         } else if (*cmd == '?') {
             // ?[AR][YPR]
@@ -131,7 +136,6 @@ void parseCommand() {
             response[8] = 'I';
             response[16] = 'D';
 
-            Serial.println(response);
             greenWifi.sendResponse(response);
         } else if (*cmd == '!') {
             char *mode = cmd + 1;
@@ -202,8 +206,12 @@ void sendESCPulse() {
     }
 
     if (micros() - loopTimer > 1000) {
-        Serial.println(F("Doing too much in 1000us!"));
-        return;
+        //Serial.println(F("Doing too much in 1000us!"));
+
+        armed = false;
+        sendESCPulse();
+        digitalWrite(LED_BUILTIN, HIGH);
+        //while (true) {}
     }
 
     while (PORTD >= 16) {

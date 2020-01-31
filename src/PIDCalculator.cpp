@@ -30,16 +30,13 @@ float PIDCalculator::rollRateKd;
 
 float throttle;
 
-float maxYaw = 300;
-float maxPitch = 300;
-float maxRoll = 300;
+float maxYaw = 250;
+float maxPitch = 200;
+float maxRoll = 200;
 
-int MODE = RATE_MODE;
+int pulseA, pulseB, pulseC, pulseD;
 
-int inputBuffer[150];
-int setPointBuffer[150];
-int counter = 0;
-int intervalCounter = 0;
+int MODE = ANGLE_MODE;
 
 PIDCalculator::PIDCalculator() :
 yawAnglePid(greenImu.getYawAngle(), &yawRateSetpoint, &yawAngleSetpoint, 0, 0, 0, DIRECT, SAMPLE_RATE_MILLS),
@@ -100,16 +97,16 @@ void PIDCalculator::initPIDValues() {
 void PIDCalculator::calculate(int throttleInputChannel, int yawInputChannel, int pitchInputChannel,
                               int rollInputChannel) {
     //lower throttle value by ~25% to allow room for pid control
-    throttle = map(throttleInputChannel, 1000, 2000, 1000, 1700);
+    throttle = map(throttleInputChannel, 1000, 2000, 1000, 1800);
 
     if (MODE == RATE_MODE) {
         yawRateSetpoint = map(yawInputChannel, 1000, 2000, -350, 350);
         pitchRateSetpoint = map(pitchInputChannel, 1000, 2000, -250, 250);
         rollRateSetpoint = map(rollInputChannel, 1000, 2000, -250, 250);
     } else {
-        yawAngleSetpoint = map(yawInputChannel, 1000, 2000, -30, 30);
-        pitchAngleSetpoint = map(pitchInputChannel, 1000, 2000, -30, 30);
-        rollAngleSetpoint = map(rollInputChannel, 1000, 2000, -30, 30);
+        yawAngleSetpoint = map(yawInputChannel, 1000, 2000, -45, 45);
+        pitchAngleSetpoint = map(pitchInputChannel, 1000, 2000, -45, 45);
+        rollAngleSetpoint = map(rollInputChannel, 1000, 2000, -45, 45);
 
         //limit setpoint to zero around middle of joystick +-20
         if (yawInputChannel < 1510 && yawInputChannel > 1490) yawAngleSetpoint = 0;
@@ -123,11 +120,10 @@ void PIDCalculator::calculate(int throttleInputChannel, int yawInputChannel, int
 
 void PIDCalculator::calculatePID() {
     if(MODE == ANGLE_MODE) {
-        yawAnglePid.Compute();
+        //yawAnglePid.Compute();
         pitchAnglePid.Compute();
         rollAnglePid.Compute();
     }
-    
     yawRatePid.Compute();
     pitchRatePid.Compute();
     rollRatePid.Compute();
@@ -185,4 +181,22 @@ void PIDCalculator::updateAnglePID(Axis axis, float kp, float ki, float kd) {
         EEPROM.put(ANGLE_PITCH_KI_EEPROM_ADDRESS, ki);
         EEPROM.put(ANGLE_PITCH_KD_EEPROM_ADDRESS, kd);
     }
+}
+
+void PIDCalculator::enablePid() {
+    yawRatePid.SetMode(AUTOMATIC);
+    yawAnglePid.SetMode(AUTOMATIC);
+    pitchRatePid.SetMode(AUTOMATIC);
+    pitchAnglePid.SetMode(AUTOMATIC);
+    rollRatePid.SetMode(AUTOMATIC);
+    rollAnglePid.SetMode(AUTOMATIC);
+}
+
+void PIDCalculator::disablePid() {
+    yawRatePid.SetMode(MANUAL);
+    yawAnglePid.SetMode(MANUAL);
+    pitchRatePid.SetMode(MANUAL);
+    pitchAnglePid.SetMode(MANUAL);
+    rollRatePid.SetMode(MANUAL);
+    rollAnglePid.SetMode(MANUAL);
 }

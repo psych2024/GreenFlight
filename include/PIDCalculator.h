@@ -32,6 +32,8 @@ enum Axis {
 class PIDCalculator {
 public:
     void calculate(int throttleInputChannel, int yawInputChannel, int pitchInputChannel, int rollInputChannel);
+    void enablePid();
+    void disablePid();
     int getCalculatedPulseA();
     int getCalculatedPulseB();
     int getCalculatedPulseC();
@@ -47,17 +49,16 @@ public:
     static float yawRateKp, yawRateKi, yawRateKd;
     static float pitchRateKp, pitchRateKi, pitchRateKd;
     static float rollRateKp, rollRateKi, rollRateKd;
+
+    float yawOutput, pitchOutput, rollOutput;
+    float yawAngleSetpoint, pitchAngleSetpoint, rollAngleSetpoint;
+    float yawRateSetpoint, pitchRateSetpoint, rollRateSetpoint;
     PIDCalculator();
 
 private:
     void calculatePID();
     void updateMotorPulse();
     void initPIDValues();
-
-    float yawOutput, pitchOutput, rollOutput;
-    float yawAngleSetpoint, pitchAngleSetpoint, rollAngleSetpoint;
-    float yawRateSetpoint, pitchRateSetpoint, rollRateSetpoint;
-    int pulseA, pulseB, pulseC, pulseD;
 
     PID yawAnglePid, yawRatePid;
     PID pitchAnglePid, pitchRatePid;
