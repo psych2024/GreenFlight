@@ -738,7 +738,7 @@ bool ESP8266Class::configureTCPServer(uint8_t create, uint16_t port) {
         sprintf(params, "1,%d", port);
     else
 
-        sprintf(params, "0", port);
+        sprintf(params, "0");
 
     sendCommand(ESP8266_SERVER_CONFIG, ESP8266_CMD_SETUP, params);
 
@@ -858,13 +858,9 @@ int16_t ESP8266Class::udpSend(const uint8_t *buf, size_t buf_size) {
     rsp = readForResponses(RESPONSE_OK, RESPONSE_ERROR, COMMAND_RESPONSE_TIMEOUT);
     if (rsp > 0) {
         _serial->print((const char *) buf);
-
-        rsp = readForResponses(RESPONSE_OK, RESPONSE_FAIL, COMMAND_RESPONSE_TIMEOUT);
-
-        if (rsp > 0)
-            return buf_size;
-
+        //no need to check for response, takes too long
     }
+
     return rsp;
 }
 
@@ -934,7 +930,6 @@ bool ESP8266Class::find(uint8_t *target)
 //////////////////////////////////////////////////
 // Private, Low-Level, Ugly, Hardware Functions //
 //////////////////////////////////////////////////
-
 void ESP8266Class::sendCommand(const char *cmd, uint8_t type, const char *params) {
     //if got any data streaming in, flush the data
     //if(_serial->available()>0) _serial->readString();
@@ -946,6 +941,7 @@ void ESP8266Class::sendCommand(const char *cmd, uint8_t type, const char *params
 
     _serial->write(0x41);
     _serial->write(0x54);
+
     _serial->print((const __FlashStringHelper *) cmd);
     if (type == ESP8266_CMD_QUERY)
         //_serial->print(F("?"));
