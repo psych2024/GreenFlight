@@ -34,8 +34,6 @@ float maxYaw = 250;
 float maxPitch = 200;
 float maxRoll = 200;
 
-int pulseA, pulseB, pulseC, pulseD;
-
 int MODE = ANGLE_MODE;
 
 PIDCalculator::PIDCalculator() :

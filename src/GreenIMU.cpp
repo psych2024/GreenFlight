@@ -23,8 +23,6 @@ MPU6050 mpu;
 void GreenIMU::init() {
     Serial.println(F("Initializing imu module..."));
 
-    Fastwire::setup(400, true);
-
     Serial.println(F("Initializing MPU6050..."));
     mpu.initialize();
     uint8_t status = mpu.dmpInitialize();

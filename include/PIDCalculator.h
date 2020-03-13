@@ -53,6 +53,7 @@ public:
     float yawOutput, pitchOutput, rollOutput;
     float yawAngleSetpoint, pitchAngleSetpoint, rollAngleSetpoint;
     float yawRateSetpoint, pitchRateSetpoint, rollRateSetpoint;
+    int pulseA, pulseB, pulseC, pulseD;
     PIDCalculator();
 
 private:

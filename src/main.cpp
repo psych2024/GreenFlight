@@ -2,6 +2,7 @@
 #include "GreenWifi.h"
 #include "GreenIMU.h"
 #include "PIDCalculator.h"
+#include "DataLogger.h"
 
 //Latest Rate PID
 //P 5.1
@@ -46,10 +47,15 @@ void sendESCPulse();
 
 void parseCommand();
 
+void logPIDData();
+
 void setup() {
     Serial.begin(115200);
     DDRD |= B11110000;
     pinMode(13, OUTPUT);
+
+    Wire.begin();
+    Wire.setClock(1000000);
 
     greenWifi.init();
     greenImu.init();
@@ -60,6 +66,8 @@ void loop() {
 
     sendESCPulse();
 
+    logPIDData();
+
     greenImu.updateYPR();
 
     batteryVoltage = (analogRead(0) + 65) * 1.2317;
@@ -67,17 +75,17 @@ void loop() {
     //though 200hz is 5000us 250us is left as tolerance to prevent mpu6050 buffer overflow
     //By changing the MPU6050_DMP_FIFO_RATE_DIVISOR from 0x00 to 0x01, there were no changes in the sample rate
     //I suspect it is because the dmp is not affected by the rate divisor and implements its own rate
-    if (micros() - programTimer > 4750) {
-        //Serial.println(F("Can't keep up with timer!"));
+    if (micros() - programTimer > 4900) {
+        Serial.println(F("Can't keep up with timer!"));
         armed = false;
         sendESCPulse();
         digitalWrite(LED_BUILTIN, HIGH);
 
-        //while (true) {}
+        while (true) {}
     }
 
     //rest of the time can be used to parse command
-    while (micros() - programTimer <= 4750) parseCommand();
+    while (micros() - programTimer <= 4900) parseCommand();
 }
 
 void parseCommand() {
@@ -97,6 +105,7 @@ void parseCommand() {
             armed = false;
             pidCalculator.disablePid();
             digitalWrite(LED_BUILTIN, LOW);
+            dataLogger.updateDataLength();
             greenWifi.sendResponse("DISARMED");
         } else if (*cmd == '?') {
             // ?[AR][YPR]
@@ -216,4 +225,21 @@ void sendESCPulse() {
         if (timerC <= loopTimer) PORTD &= B10111111;
         if (timerD <= loopTimer) PORTD &= B01111111;
     }
+}
+
+// maximum number of bytes that can be recorded per cycle: 28
+float buffer[7];
+void logPIDData() {
+    if (!armed)
+        return;
+
+    buffer[0] = *greenImu.getPitchAngle();
+    buffer[2] = pidCalculator.pitchAngleSetpoint;
+    buffer[1] = pidCalculator.pitchOutput;
+    buffer[3] = pidCalculator.pulseA;
+    buffer[4] = pidCalculator.pulseB;
+    buffer[5] = pidCalculator.pulseC;
+    buffer[6] = pidCalculator.pulseD;
+
+    dataLogger.writePIDData(buffer, 7);
 }
