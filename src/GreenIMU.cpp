@@ -35,11 +35,11 @@ void GreenIMU::init() {
     mpu.setDMPEnabled(true);
     packetSize = mpu.dmpGetFIFOPacketSize();
 
-    mpu.setXAccelOffset(-2126);
-    mpu.setYAccelOffset(-45);
-    mpu.setZAccelOffset(1605);
-    mpu.setXGyroOffset(88);
-    mpu.setYGyroOffset(204);
+    mpu.setXAccelOffset(-2120);
+    mpu.setYAccelOffset(-127);
+    mpu.setZAccelOffset(1620);
+    mpu.setXGyroOffset(85);
+    mpu.setYGyroOffset(206);
     mpu.setZGyroOffset(16);
 
     Serial.println(F("Successfully initialized imu module!"));

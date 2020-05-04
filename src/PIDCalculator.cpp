@@ -30,7 +30,7 @@ float PIDCalculator::rollRateKd;
 
 float throttle;
 
-float maxYaw = 250;
+float maxYaw = 200;
 float maxPitch = 200;
 float maxRoll = 200;
 

@@ -66,8 +66,6 @@ void loop() {
 
     sendESCPulse();
 
-    logPIDData();
-
     greenImu.updateYPR();
 
     batteryVoltage = (analogRead(0) + 65) * 1.2317;
@@ -75,7 +73,7 @@ void loop() {
     //though 200hz is 5000us 250us is left as tolerance to prevent mpu6050 buffer overflow
     //By changing the MPU6050_DMP_FIFO_RATE_DIVISOR from 0x00 to 0x01, there were no changes in the sample rate
     //I suspect it is because the dmp is not affected by the rate divisor and implements its own rate
-    if (micros() - programTimer > 4900) {
+    if (micros() - programTimer > 4850) {
         Serial.println(F("Can't keep up with timer!"));
         armed = false;
         sendESCPulse();
@@ -85,7 +83,7 @@ void loop() {
     }
 
     //rest of the time can be used to parse command
-    while (micros() - programTimer <= 4900) parseCommand();
+    while (micros() - programTimer <= 4850) parseCommand();
 }
 
 void parseCommand() {
@@ -209,13 +207,15 @@ void sendESCPulse() {
         timerD = loopTimer + 1000;
     }
 
+    logPIDData();
+
     if (micros() - loopTimer > 1000) {
-        //Serial.println(F("Doing too much in 1000us!"));
+        Serial.println(F("Doing too much in 1000us!"));
 
         armed = false;
         sendESCPulse();
         digitalWrite(LED_BUILTIN, HIGH);
-        //while (true) {}
+        while (true) {}
     }
 
     while (PORTD >= 16) {
@@ -229,17 +229,18 @@ void sendESCPulse() {
 
 // maximum number of bytes that can be recorded per cycle: 28
 float buffer[7];
+
 void logPIDData() {
     if (!armed)
         return;
 
-    buffer[0] = *greenImu.getPitchAngle();
-    buffer[2] = pidCalculator.pitchAngleSetpoint;
-    buffer[1] = pidCalculator.pitchOutput;
-    buffer[3] = pidCalculator.pulseA;
-    buffer[4] = pidCalculator.pulseB;
-    buffer[5] = pidCalculator.pulseC;
-    buffer[6] = pidCalculator.pulseD;
+    buffer[0] = pidCalculator.pulseA;
+    buffer[1] = pidCalculator.pulseB;
+    buffer[2] = pidCalculator.pulseC;
+    buffer[3] = pidCalculator.pulseD;
+    buffer[4] = *greenImu.getRollRate();
+    buffer[5] = *greenImu.getRollAngle();
+    buffer[6] = 0;
 
     dataLogger.writePIDData(buffer, 7);
 }

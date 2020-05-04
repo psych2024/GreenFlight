@@ -56,14 +56,14 @@ public:
     int pulseA, pulseB, pulseC, pulseD;
     PIDCalculator();
 
+    PID yawAnglePid, yawRatePid;
+    PID pitchAnglePid, pitchRatePid;
+    PID rollAnglePid, rollRatePid;
+
 private:
     void calculatePID();
     void updateMotorPulse();
     void initPIDValues();
-
-    PID yawAnglePid, yawRatePid;
-    PID pitchAnglePid, pitchRatePid;
-    PID rollAnglePid, rollRatePid;
 };
 
 extern int MODE;

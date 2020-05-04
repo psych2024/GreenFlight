@@ -63,7 +63,9 @@ public:
     float GetKi();                          //  they were created mainly for the pid front-end,
     float GetKd();                          // where it's important to know what is actually
     int GetMode();                          //  inside the PID.
-    int GetDirection();                      //
+    int GetDirection();  //
+
+    float outputSum;
 
 private:
     void Initialize();
@@ -85,7 +87,7 @@ private:
     //   what these values are.  with pointers we'll just know
 
     int sampleTime;
-    float outputSum, lastInput;
+    float lastInput;
 
     float outMin, outMax;
     bool inAuto, pOnE;
